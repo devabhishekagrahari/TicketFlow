@@ -314,8 +314,16 @@ export async function registerRoutes(
         ...validatedData,
         userId: req.user!.userId,
         agentId: agentId,
-        commissionAmount,
       });
+
+      // Update booking with commission amount if applicable
+      let finalBooking = booking;
+      if (commissionAmount !== "0.00") {
+        const updated = await storage.updateBooking(booking.id, {
+          commissionAmount: commissionAmount as any,
+        });
+        if (updated) finalBooking = updated;
+      }
 
       // Update route available seats
       await storage.updateRoute(route.id, {
@@ -333,7 +341,7 @@ export async function registerRoutes(
         }
       }
 
-      res.status(201).json(booking);
+      res.status(201).json(finalBooking);
     } catch (error: any) {
       if (error.name === "ZodError") {
         return res.status(400).json({ error: fromZodError(error).toString() });

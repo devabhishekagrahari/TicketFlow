@@ -58,12 +58,21 @@ A modern, full-stack bus ticket booking platform built with the MERN stack (modi
 ### 1. Clone the Repository
 ```bash
 git clone <repository-url>
-cd bus-booking-app
+cd TicketFlow-2
 ```
 
 ### 2. Install Dependencies
+
+**Option A: Install All (Recommended)**
 ```bash
-npm install
+npm run install:all
+```
+
+**Option B: Install Separately**
+```bash
+npm install              # Root dependencies
+cd client && npm install # Frontend dependencies
+cd ../server && npm install # Backend dependencies
 ```
 
 ### 3. Environment Setup
@@ -119,6 +128,9 @@ After running the seed script:
 ```
 .
 ├── client/                 # Frontend React application
+│   ├── package.json       # Frontend dependencies
+│   ├── vite.config.ts     # Frontend build config
+│   ├── README.md          # Frontend documentation
 │   ├── src/
 │   │   ├── components/    # Reusable UI components
 │   │   ├── pages/         # Page components
@@ -126,6 +138,8 @@ After running the seed script:
 │   │   └── App.tsx        # Main app component
 │   └── index.html
 ├── server/                 # Backend Express application
+│   ├── package.json       # Backend dependencies
+│   ├── README.md          # Backend documentation
 │   ├── auth.ts            # Authentication middleware
 │   ├── db.ts              # Database connection
 │   ├── routes.ts          # API routes
@@ -134,7 +148,12 @@ After running the seed script:
 │   └── index.ts           # Server entry point
 ├── shared/                 # Shared code (types, schemas)
 │   └── schema.ts          # Drizzle ORM schema
+├── script/                 # Build scripts
+│   ├── build-frontend.ts  # Frontend build script
+│   ├── build-backend.ts   # Backend build script
+│   └── build-monolith.ts  # Monolith build script
 ├── DEPLOYMENT_GUIDE.md    # Detailed deployment instructions
+├── DEPLOY_SEPARATE.md     # Separate deployment guide
 ├── API_DOCUMENTATION.md   # Complete API reference
 └── TECHNICAL_DOCUMENTATION.md  # Technical overview
 ```
@@ -169,13 +188,58 @@ See [API_DOCUMENTATION.md](./API_DOCUMENTATION.md) for complete API reference.
 
 ## 🚀 Deployment
 
-For production deployment with separate frontend and backend:
+This project supports **two deployment modes**:
 
-1. **Backend**: Deploy to any Node.js hosting (AWS, DigitalOcean, Heroku)
-2. **Frontend**: Deploy to static hosting (Vercel, Netlify, S3)
-3. **Database**: Use managed PostgreSQL (AWS RDS, Supabase, Neon)
+### Option 1: Monolith Deployment (Single Server)
+Deploy frontend and backend together on one server.
+
+```bash
+npm run build        # Builds both frontend and backend
+npm start            # Starts production server
+```
 
 See [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md) for detailed instructions.
+
+### Option 2: Separate Deployment (Recommended for Scale)
+Deploy frontend and backend separately for better scalability.
+
+**Frontend:**
+```bash
+npm run build:frontend
+# Deploy dist/frontend/ to Vercel, Netlify, or static hosting
+```
+
+**Backend:**
+```bash
+npm run build:backend
+# Deploy dist/backend/ to Railway, Render, or Node.js hosting
+```
+
+See [DEPLOY_SEPARATE.md](./DEPLOY_SEPARATE.md) for detailed separate deployment guide.
+
+### Quick Commands
+
+```bash
+# Install all dependencies
+npm run install:all
+
+# Build frontend only
+npm run build:frontend
+
+# Build backend only
+npm run build:backend
+
+# Build both separately
+npm run build:all
+
+# Build monolith (frontend + backend together)
+npm run build
+
+# Development
+npm run dev              # Backend dev server
+npm run dev:client       # Frontend dev server
+npm run dev:backend      # Backend dev server
+```
 
 ## 🔒 Security Features
 
@@ -230,12 +294,40 @@ See [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md) for detailed instructions.
 
 ## 📝 Scripts
 
+### Root Scripts
 ```bash
-npm run dev          # Start development server
-npm run build        # Build for production
-npm start            # Start production server
-npm run db:push      # Push schema changes to database
-npm run check        # TypeScript type checking
+npm run install:all      # Install all dependencies (root, client, server)
+npm run dev              # Start backend development server
+npm run dev:client       # Start frontend development server
+npm run dev:backend      # Start backend development server
+npm run build            # Build monolith (frontend + backend together)
+npm run build:frontend   # Build frontend only
+npm run build:backend    # Build backend only
+npm run build:all        # Build both separately
+npm start                # Start production server (monolith)
+npm run check            # TypeScript type checking
+npm run check:frontend   # Type check frontend
+npm run check:backend    # Type check backend
+npm run db:push          # Push schema changes to database
+```
+
+### Frontend Scripts (in `client/` directory)
+```bash
+cd client
+npm run dev              # Start dev server
+npm run build            # Build for production
+npm run preview          # Preview production build
+npm run check            # Type check
+```
+
+### Backend Scripts (in `server/` directory)
+```bash
+cd server
+npm run dev              # Start dev server
+npm run build            # Build for production
+npm start                # Start production server
+npm run check            # Type check
+npm run db:push          # Push database schema
 ```
 
 ## 📖 Documentation

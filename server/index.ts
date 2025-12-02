@@ -2,6 +2,7 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
+import cors from "cors";
 
 const app = express();
 const httpServer = createServer(app);
@@ -21,6 +22,22 @@ app.use(
 );
 
 app.use(express.urlencoded({ extended: false }));
+
+// CORS configuration
+// In production, allow specific origins; in development, allow all
+const corsOptions = process.env.NODE_ENV === "production" && process.env.CORS_ORIGIN
+  ? {
+      origin: process.env.CORS_ORIGIN.split(",").map((origin) => origin.trim()),
+      credentials: true,
+      methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+      allowedHeaders: ["Content-Type", "Authorization"],
+    }
+  : {
+      origin: true, // Allow all origins in development
+      credentials: true,
+    };
+
+app.use(cors(corsOptions));
 
 export function log(message: string, source = "express") {
   const formattedTime = new Date().toLocaleTimeString("en-US", {

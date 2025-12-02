@@ -79,7 +79,15 @@ async function seed() {
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
 
-    const routesToCreate = [];
+    const routesToCreate: Array<{
+      busId: number;
+      source: string;
+      destination: string;
+      departureTime: Date;
+      arrivalTime: Date;
+      price: string;
+      availableSeats: number;
+    }> = [];
 
     // Today's routes
     [bus1, bus2, bus3].forEach((bus, index) => {
